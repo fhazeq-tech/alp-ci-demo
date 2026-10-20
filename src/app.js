@@ -45,6 +45,30 @@ function createApp(store = createStore()) {
     res.json({ studentId: id, sessions: recs.length, rate });
   });
 
+  // --- Instructors: who can teach which language, and on which days ---
+  const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+  app.post('/instructors', (req, res) => {
+    const { name, languages, available } = req.body || {};
+    if (!name || typeof name !== 'string') return res.status(400).json({ error: 'name is required' });
+    if (!Array.isArray(languages) || languages.length === 0 || !languages.every((l) => LANGUAGES.includes(l)))
+      return res.status(400).json({ error: 'languages must be a non-empty list of supported languages' });
+    if (!Array.isArray(available) || !available.every((d) => DAYS.includes(d)))
+      return res.status(400).json({ error: 'available must be a list of weekdays (Mon-Sun)' });
+    res.status(201).json(store.addInstructor({ name, languages, available }));
+  });
+
+  app.get('/instructors', (req, res) => {
+    let list = store.listInstructors({ language: req.query.language });
+    if (req.query.day) list = list.filter((i) => i.available.includes(req.query.day));
+    res.json(list);
+  });
+
+  app.delete('/instructors/:id', (req, res) => {
+    const ok = store.removeInstructor(Number(req.params.id));
+    res.status(ok ? 204 : 404).end();
+  });
+
   return app;
 }
 module.exports = { createApp };
