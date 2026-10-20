@@ -2,7 +2,9 @@
 function createStore() {
   const students = new Map();
   const attendance = [];
+  const instructors = new Map();
   let nextId = 1;
+  let nextInstructorId = 1;
   return {
     addStudent({ name, language, level }) {
       const s = { id: nextId++, name, language, level };
@@ -22,6 +24,16 @@ function createStore() {
       return rec;
     },
     attendanceFor: (studentId) => attendance.filter((a) => a.studentId === studentId),
+    addInstructor({ name, languages, available }) {
+      const i = { id: nextInstructorId++, name, languages, available };
+      instructors.set(i.id, i);
+      return i;
+    },
+    listInstructors({ language } = {}) {
+      return [...instructors.values()].filter((i) => !language || i.languages.includes(language));
+    },
+    getInstructor: (id) => instructors.get(id),
+    removeInstructor: (id) => instructors.delete(id),
   };
 }
 module.exports = { createStore };
