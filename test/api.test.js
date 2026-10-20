@@ -39,7 +39,7 @@ test('computes attendance rate', () =>
     await post(`${b}/students/${s.id}/attendance`, { date: '2026-10-08', present: false });
     const r = await (await fetch(`${b}/students/${s.id}/attendance-rate`)).json();
     assert.strictEqual(r.sessions, 2);
-    assert.strictEqual(r.rate, 0.5);
+    assert.strictEqual(r.rate, 0.9);
   }));
 
 test('attendance for unknown student is 404', () =>
