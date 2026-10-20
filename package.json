@@ -1,0 +1,12 @@
+{
+  "name": "alp-ci-demo",
+  "version": "1.0.0",
+  "description": "Slice of the AMWA ALP platform (students + attendance API) used to learn CI/CD with GitHub Actions and Docker",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test \"test/*.test.js\""
+  },
+  "dependencies": { "express": "^4.21.2" },
+  "engines": { "node": ">=20" }
+}
